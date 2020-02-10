@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq
+
+  waitforrabbitmq.publisher:
+    image: waitforrabbitmq.publisher
+    build:
+      context: .
+      dockerfile: WaitForRabbitMQ.Publisher/Dockerfile
+    depends_on:
+      - rabbitmq
+
+  waitforrabbitmq.receiver:
+    image: waitforrabbitmq.receiver
+    build:
+      context: .
+      dockerfile: WaitForRabbitMQ.Receiver/Dockerfile
+    depends_on:
+      - rabbitmq
+      - waitforrabbitmq.publisher

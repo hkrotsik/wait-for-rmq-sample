@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    ports:
+      - 5672:5672
+
+  waitforrabbitmq.publisher:
+    environment:
+      HostName: 'rabbitmq'
+    volumes:
+      - ./wait-for-it.sh:/usr/bin/wait-for-it.sh
+    entrypoint: ["wait-for-it.sh", "rabbitmq:5672", "--strict", "--", "dotnet", "WaitForRabbitMQ.Publisher.dll"]
+
+  waitforrabbitmq.receiver:
+    environment:
+      HostName: 'rabbitmq'
+    volumes:
+      - ./wait-for-it.sh:/usr/bin/wait-for-it.sh
+    entrypoint: ["wait-for-it.sh", "rabbitmq:5672", "--strict", "--", "dotnet", "WaitForRabbitMQ.Receiver.dll"]
